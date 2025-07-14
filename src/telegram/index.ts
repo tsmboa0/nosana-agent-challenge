@@ -31,7 +31,7 @@ export class TelegramBot {
   private token: string;
 
   constructor() {
-    this.token = process.env.TELEGRAM_BOT_TOKEN || '7861581965:AAGeroEr7Soe2fun8yGAiEWDoDiHmdhUl0c';
+    this.token = process.env.TELEGRAM_BOT_TOKEN!;
     if (!this.token) {
       throw new Error('TELEGRAM_BOT_TOKEN environment variable is required');
     }
