@@ -1,0 +1,80 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  telegramId    String   @unique
+  username      String?
+  firstName     String?
+  lastName      String?
+  publicKey     String   @unique // Solana public key
+  encryptedPrivateKey String // Encrypted private key
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  assets        Asset[]
+  transactions  Transaction[]
+  
+  @@map("users")
+}
+
+model Asset {
+  id            String   @id @default(cuid())
+  symbol        String   // Token/stock symbol (e.g., "SOL", "TSLAx")
+  name          String   // Full name
+  type          AssetType
+  amount        Float    // Quantity held
+  value         Float    // Current value in USD
+  userId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, symbol])
+  @@map("assets")
+}
+
+model Transaction {
+  id            String           @id @default(cuid())
+  type          TransactionType
+  symbol        String
+  amount        Float
+  price         Float            // Price per unit at time of transaction
+  totalValue    Float            // Total transaction value
+  txHash        String?          // Solana transaction hash
+  status        TransactionStatus @default(PENDING)
+  userId        String
+  createdAt     DateTime         @default(now())
+  
+  // Relations
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("transactions")
+}
+
+enum AssetType {
+  TOKEN
+  STOCK
+}
+
+enum TransactionType {
+  BUY
+  SELL
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}

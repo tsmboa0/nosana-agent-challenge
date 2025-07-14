@@ -4,3 +4,7 @@ dist
 .mastra
 *.db
 *.db-*
+
+/src/generated/prisma
+.env
+.dockerignore
