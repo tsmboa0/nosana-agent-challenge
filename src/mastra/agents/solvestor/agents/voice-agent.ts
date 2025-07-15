@@ -2,9 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { Agent } from "@mastra/core/agent";
 import { CompositeVoice } from "@mastra/core/voice";
 import { OpenAIVoice } from "@mastra/voice-openai";
-import { createReadStream, createWriteStream } from "fs";
 import { PlayAIVoice } from "@mastra/voice-playai";
-import path from "path";
  
 
 export const voiceAgent = new Agent({
